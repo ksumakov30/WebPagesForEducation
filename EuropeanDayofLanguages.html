@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>European Day of Languages - Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #e0f7fa;
+            color: #006064;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 150, 136, 0.2);
+            padding: 30px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #4db6ac;
+        }
+
+        h1 {
+            color: #00796b;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #004d40;
+            font-size: 1.1em;
+        }
+
+        .question-container {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #f0fdfa;
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+        }
+
+        .question-number {
+            font-weight: bold;
+            color: #00796b;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .question-image {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 2px solid #4db6ac;
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            color: #004d40;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 12px 15px;
+            background-color: #b2dfdb;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 1em;
+            color: #004d40;
+        }
+
+        .option:hover {
+            background-color: #80cbc4;
+            transform: translateY(-2px);
+        }
+
+        .option.selected {
+            background-color: #26a69a;
+            color: white;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1em;
+        }
+
+        .nav-button:hover {
+            background-color: #004d40;
+        }
+
+        .nav-button:disabled {
+            background-color: #b2dfdb;
+            cursor: not-allowed;
+        }
+
+        .results {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .results h2 {
+            color: #00796b;
+            margin-bottom: 20px;
+        }
+
+        .score {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #004d40;
+        }
+
+        .restart-button {
+            padding: 12px 25px;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s;
+        }
+
+        .restart-button:hover {
+            background-color: #004d40;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #e0f2f1;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: #26a69a;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-counter {
+            text-align: right;
+            margin-bottom: 10px;
+            color: #00796b;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Европейсткий день языков (European Day of Languages) </h1>
+            <h3>Interactive web-app by Kirill Shumakov (EM-241)</h3>
+        </header>
+
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="question-counter" id="question-counter">Question 1 of 15</div>
+
+        <div id="quiz-container">
+            <!-- Questions will be inserted via JavaScript -->
+        </div>
+
+        <div class="navigation">
+            <button class="nav-button" id="prev-button" disabled>Previous</button>
+            <button class="nav-button" id="next-button">Next</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Quiz Results</h2>
+            <div class="score" id="score"></div>
+            <button class="restart-button" id="restart-button">Take the Quiz Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Quiz questions
+        const questions = [
+            {
+                question: "How many official languages are there in the European Union?",
+                options: ["24", "27"],
+                correctAnswer: 0,
+                image: "1.png"
+            },
+            {
+                question: "Which language is the most widely spoken native language in the EU?",
+                options: ["German", "English"],
+                correctAnswer: 0,
+                image: "2.png"
+            },
+            {
+                question: "In which year was the European Day of Languages established?",
+                options: ["2001", "1995"],
+                correctAnswer: 0,
+                image: "3.png"
+            },
+            {
+                question: "Which European language has the most cases?",
+                options: ["Hungarian", "Finnish"],
+                correctAnswer: 0,
+                image: "4.png"
+            },
+            {
+                question: "How many letters are in the longest word in the English language?",
+                options: ["45", "29"],
+                correctAnswer: 0,
+                image: "5.png"
+            },
+            {
+                question: "Which European language is not Indo-European?",
+                options: ["Basque", "Greek"],
+                correctAnswer: 0,
+                image: "6.png"
+            },
+            {
+                question: "Which European country has the most languages spoken within its territory?",
+                options: ["Russia", "Switzerland"],
+                correctAnswer: 0,
+                image: "7.png"
+            },
+            {
+                question: "Which language has official status in the most countries?",
+                options: ["English", "French"],
+                correctAnswer: 0,
+                image: "8.png"
+            },
+            {
+                question: "How many official languages does Switzerland have?",
+                options: ["4", "3"],
+                correctAnswer: 0,
+                image: "9.png"
+            },
+            {
+                question: "Which language uses both Cyrillic and Latin alphabets?",
+                options: ["Serbian", "Belarusian"],
+                correctAnswer: 0,
+                image: "10.png"
+            },
+            {
+                question: "Which European language has the most dialects?",
+                options: ["German", "Italian"],
+                correctAnswer: 0,
+                image: "1.png"
+            },
+            {
+                question: "Which language is the most studied foreign language in the EU?",
+                options: ["English", "French"],
+                correctAnswer: 0,
+                image: "2.png"
+            },
+            {
+                question: "How many letters are in the Icelandic alphabet?",
+                options: ["32", "28"],
+                correctAnswer: 0,
+                image: "3.png"
+            },
+            {
+                question: "Which European language has the oldest written record?",
+                options: ["Greek", "Latin"],
+                correctAnswer: 0,
+                image: "4.png"
+            },
+            {
+                question: "Which European country has the most regional languages?",
+                options: ["Italy", "Spain"],
+                correctAnswer: 0,
+                image: "5.png"
+            }
+        ];
+
+        // Variables to track quiz state
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+        let quizCompleted = false;
+
+        // DOM elements
+        const quizContainer = document.getElementById('quiz-container');
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        const resultsContainer = document.getElementById('results');
+        const scoreElement = document.getElementById('score');
+        const restartButton = document.getElementById('restart-button');
+        const progressBar = document.getElementById('progress');
+        const questionCounter = document.getElementById('question-counter');
+
+        // Function to display the current question
+        function displayQuestion() {
+            // Clear the quiz container
+            quizContainer.innerHTML = '';
+            
+            // Create element for the current question
+            const questionElement = document.createElement('div');
+            questionElement.className = 'question-container active';
+            
+            const question = questions[currentQuestionIndex];
+            
+            // Add HTML for the question
+            questionElement.innerHTML = `
+                <div class="question-number">Question ${currentQuestionIndex + 1}</div>
+                <img src="1.png" alt="Illustration for the question" class="question-image">
+                <div class="question-text">${question.question}</div>
+                <div class="options">
+                    <button class="option ${userAnswers[currentQuestionIndex] === 0 ? 'selected' : ''}" data-index="0">${question.options[0]}</button>
+                    <button class="option ${userAnswers[currentQuestionIndex] === 1 ? 'selected' : ''}" data-index="1">${question.options[1]}</button>
+                </div>
+            `;
+            
+            // Add question to container
+            quizContainer.appendChild(questionElement);
+            
+            // Add event listeners to answer options
+            const optionButtons = questionElement.querySelectorAll('.option');
+            optionButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove selection from other options
+                    optionButtons.forEach(btn => btn.classList.remove('selected'));
+                    // Highlight selected option
+                    button.classList.add('selected');
+                    // Save user's answer
+                    userAnswers[currentQuestionIndex] = parseInt(button.getAttribute('data-index'));
+                    
+                    // Enable Next button if an answer is selected
+                    if (userAnswers[currentQuestionIndex] !== null) {
+                        nextButton.disabled = false;
+                    }
+                });
+            });
+            
+            // Update navigation buttons state
+            updateNavigationButtons();
+            
+            // Update progress bar
+            updateProgressBar();
+            
+            // Update question counter
+            questionCounter.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+        }
+
+        // Function to update navigation buttons state
+        function updateNavigationButtons() {
+            // Previous button
+            prevButton.disabled = currentQuestionIndex === 0;
+            
+            // Next button
+            if (currentQuestionIndex === questions.length - 1) {
+                nextButton.textContent = 'Finish Quiz';
+                nextButton.disabled = userAnswers[currentQuestionIndex] === null;
+            } else {
+                nextButton.textContent = 'Next';
+                nextButton.disabled = userAnswers[currentQuestionIndex] === null;
+            }
+        }
+
+        // Function to update progress bar
+        function updateProgressBar() {
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // Function to go to next question
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion();
+            } else {
+                // Complete the quiz
+                completeQuiz();
+            }
+        }
+
+        // Function to go to previous question
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        // Function to complete the quiz and show results
+        function completeQuiz() {
+            // Hide quiz container and navigation
+            quizContainer.style.display = 'none';
+            document.querySelector('.navigation').style.display = 'none';
+            document.querySelector('.progress-bar').style.display = 'none';
+            document.querySelector('.question-counter').style.display = 'none';
+            
+            // Show results container
+            resultsContainer.style.display = 'block';
+            
+            // Calculate score
+            let score = 0;
+            for (let i = 0; i < questions.length; i++) {
+                if (userAnswers[i] === questions[i].correctAnswer) {
+                    score++;
+                }
+            }
+            
+            // Display score
+            scoreElement.textContent = `You answered ${score} out of ${questions.length} questions correctly!`;
+            
+            quizCompleted = true;
+        }
+
+        // Function to restart the quiz
+        function restartQuiz() {
+            // Reset state variables
+            currentQuestionIndex = 0;
+            userAnswers = new Array(questions.length).fill(null);
+            quizCompleted = false;
+            
+            // Show quiz container and navigation
+            quizContainer.style.display = 'block';
+            document.querySelector('.navigation').style.display = 'flex';
+            document.querySelector('.progress-bar').style.display = 'block';
+            document.querySelector('.question-counter').style.display = 'block';
+            
+            // Hide results container
+            resultsContainer.style.display = 'none';
+            
+            // Display first question
+            displayQuestion();
+        }
+
+        // Add event listeners to buttons
+        prevButton.addEventListener('click', prevQuestion);
+        nextButton.addEventListener('click', nextQuestion);
+        restartButton.addEventListener('click', restartQuiz);
+
+        // Initialize the quiz when the page loads
+        displayQuestion();
+    </script>
+</body>
+</html>
