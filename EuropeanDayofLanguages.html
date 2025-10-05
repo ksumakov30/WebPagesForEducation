@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>European Day of Languages - Quiz</title>
+    <title>English in SUSU Quiz</title>
     <style>
         * {
             margin: 0;
@@ -324,8 +324,8 @@
 <body>
     <div class="container">
         <header>
-            <h1><span class="language-icon">🌍</span> European Day of Languages Quiz</h1>
-            <p class="description">Test your knowledge about European languages with this interesting quiz! Questions are loaded from an INI file.</p>
+            <h1><span class="language-icon">🌍</span> English in SUSU Quiz</h1>
+            <p class="description">test by Kirill Shumakov</p>
         </header>
 
         <div id="loading" class="loading">
@@ -634,13 +634,13 @@
             // Display score details
             let detailsHTML = '';
             if (percentage >= 80) {
-                detailsHTML = '<p>Excellent! You have great knowledge about European languages!</p>';
+                detailsHTML = '<p>Excellent!</p>';
             } else if (percentage >= 60) {
-                detailsHTML = '<p>Good job! You know quite a bit about European languages.</p>';
+                detailsHTML = '<p>Good job! </p>';
             } else if (percentage >= 40) {
-                detailsHTML = '<p>Not bad! You have some knowledge about European languages.</p>';
+                detailsHTML = '<p>Not bad! </p>';
             } else {
-                detailsHTML = '<p>Keep learning! European languages are fascinating to explore.</p>';
+                detailsHTML = '<p>Keep learning!</p>';
             }
             
             scoreDetailsElement.innerHTML = detailsHTML;
