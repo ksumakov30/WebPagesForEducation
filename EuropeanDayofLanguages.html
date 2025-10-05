@@ -13,19 +13,32 @@
         }
 
         body {
-            background-color: #e0f7fa;
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
             color: #006064;
             line-height: 1.6;
             padding: 20px;
+            min-height: 100vh;
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 150, 136, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 150, 136, 0.2);
             padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #00796b, #4db6ac, #00796b);
         }
 
         header {
@@ -38,30 +51,58 @@
         h1 {
             color: #00796b;
             margin-bottom: 10px;
+            font-size: 2.2em;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .description {
             color: #004d40;
             font-size: 1.1em;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .question-container {
             margin-bottom: 25px;
-            padding: 15px;
+            padding: 20px;
             border-radius: 10px;
             background-color: #f0fdfa;
             display: none;
+            border-left: 5px solid #26a69a;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         }
 
         .question-container.active {
             display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .question-number {
             font-weight: bold;
             color: #00796b;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             font-size: 1.2em;
+            display: flex;
+            align-items: center;
+        }
+
+        .question-number::before {
+            content: "Q";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background-color: #00796b;
+            color: white;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-size: 0.9em;
         }
 
         .question-image {
@@ -71,22 +112,25 @@
             border-radius: 8px;
             margin-bottom: 15px;
             border: 2px solid #4db6ac;
+            display: none;
         }
 
         .question-text {
-            font-size: 1.1em;
-            margin-bottom: 15px;
+            font-size: 1.2em;
+            margin-bottom: 20px;
             color: #004d40;
+            font-weight: 500;
+            line-height: 1.5;
         }
 
         .options {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .option {
-            padding: 12px 15px;
+            padding: 15px;
             background-color: #b2dfdb;
             border: none;
             border-radius: 8px;
@@ -95,74 +139,119 @@
             text-align: left;
             font-size: 1em;
             color: #004d40;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .option:hover::before {
+            left: 100%;
         }
 
         .option:hover {
             background-color: #80cbc4;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .option.selected {
             background-color: #26a69a;
             color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
         }
 
         .navigation {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
+            margin-top: 30px;
         }
 
         .nav-button {
-            padding: 10px 20px;
-            background-color: #00796b;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-size: 1em;
-        }
-
-        .nav-button:hover {
-            background-color: #004d40;
-        }
-
-        .nav-button:disabled {
-            background-color: #b2dfdb;
-            cursor: not-allowed;
-        }
-
-        .results {
-            display: none;
-            text-align: center;
-            padding: 30px;
-        }
-
-        .results h2 {
-            color: #00796b;
-            margin-bottom: 20px;
-        }
-
-        .score {
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            color: #004d40;
-        }
-
-        .restart-button {
             padding: 12px 25px;
             background-color: #00796b;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 120px;
+        }
+
+        .nav-button:hover {
+            background-color: #004d40;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-button:disabled {
+            background-color: #b2dfdb;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .results {
+            display: none;
+            text-align: center;
+            padding: 40px 30px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .results h2 {
+            color: #00796b;
+            margin-bottom: 25px;
+            font-size: 2em;
+        }
+
+        .score {
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            color: #004d40;
+            padding: 20px;
+            background-color: #f0fdfa;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .score-details {
+            margin-top: 20px;
             font-size: 1.1em;
-            transition: background-color 0.3s;
+            color: #00796b;
+        }
+
+        .restart-button {
+            padding: 15px 30px;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 20px;
         }
 
         .restart-button:hover {
             background-color: #004d40;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .progress-bar {
@@ -171,13 +260,15 @@
             border-radius: 5px;
             margin-bottom: 20px;
             overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .progress {
             height: 100%;
-            background-color: #26a69a;
+            background: linear-gradient(90deg, #00796b, #4db6ac);
             width: 0%;
-            transition: width 0.3s ease;
+            transition: width 0.5s ease;
+            border-radius: 5px;
         }
 
         .question-counter {
@@ -185,146 +276,216 @@
             margin-bottom: 10px;
             color: #00796b;
             font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .language-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2em;
+            color: #00796b;
+        }
+
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #d32f2f;
+            background-color: #ffebee;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .nav-button {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Европейсткий день языков (European Day of Languages) </h1>
-            <h3>Interactive web-app by Kirill Shumakov (EM-241)</h3>
+            <h1><span class="language-icon">🌍</span> European Day of Languages Quiz</h1>
+            <p class="description">Test your knowledge about European languages with this interesting quiz! Questions are loaded from an INI file.</p>
         </header>
 
-        <div class="progress-bar">
-            <div class="progress" id="progress"></div>
-        </div>
-        <div class="question-counter" id="question-counter">Question 1 of 15</div>
-
-        <div id="quiz-container">
-            <!-- Questions will be inserted via JavaScript -->
+        <div id="loading" class="loading">
+            Loading questions...
         </div>
 
-        <div class="navigation">
-            <button class="nav-button" id="prev-button" disabled>Previous</button>
-            <button class="nav-button" id="next-button">Next</button>
+        <div id="error" class="error" style="display: none;">
+            Error loading questions. Please check if questions.ini file exists.
         </div>
 
-        <div class="results" id="results">
-            <h2>Quiz Results</h2>
-            <div class="score" id="score"></div>
-            <button class="restart-button" id="restart-button">Take the Quiz Again</button>
+        <div id="quiz-content" style="display: none;">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="question-counter" id="question-counter">Question 1 of 0</div>
+
+            <div id="quiz-container">
+                <!-- Questions will be inserted via JavaScript -->
+            </div>
+
+            <div class="navigation">
+                <button class="nav-button" id="prev-button" disabled>← Previous</button>
+                <button class="nav-button" id="next-button">Next →</button>
+            </div>
+
+            <div class="results" id="results">
+                <h2><span class="language-icon">🏆</span> Quiz Results</h2>
+                <div class="score" id="score"></div>
+                <div id="score-details" class="score-details"></div>
+                <button class="restart-button" id="restart-button">Take the Quiz Again</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // Quiz questions
-        const questions = [
-            {
-                question: "How many official languages are there in the European Union?",
-                options: ["24", "27"],
-                correctAnswer: 0,
-                image: "1.png"
-            },
-            {
-                question: "Which language is the most widely spoken native language in the EU?",
-                options: ["German", "English"],
-                correctAnswer: 0,
-                image: "2.png"
-            },
-            {
-                question: "In which year was the European Day of Languages established?",
-                options: ["2001", "1995"],
-                correctAnswer: 0,
-                image: "3.png"
-            },
-            {
-                question: "Which European language has the most cases?",
-                options: ["Hungarian", "Finnish"],
-                correctAnswer: 0,
-                image: "4.png"
-            },
-            {
-                question: "How many letters are in the longest word in the English language?",
-                options: ["45", "29"],
-                correctAnswer: 0,
-                image: "5.png"
-            },
-            {
-                question: "Which European language is not Indo-European?",
-                options: ["Basque", "Greek"],
-                correctAnswer: 0,
-                image: "6.png"
-            },
-            {
-                question: "Which European country has the most languages spoken within its territory?",
-                options: ["Russia", "Switzerland"],
-                correctAnswer: 0,
-                image: "7.png"
-            },
-            {
-                question: "Which language has official status in the most countries?",
-                options: ["English", "French"],
-                correctAnswer: 0,
-                image: "8.png"
-            },
-            {
-                question: "How many official languages does Switzerland have?",
-                options: ["4", "3"],
-                correctAnswer: 0,
-                image: "9.png"
-            },
-            {
-                question: "Which language uses both Cyrillic and Latin alphabets?",
-                options: ["Serbian", "Belarusian"],
-                correctAnswer: 0,
-                image: "10.png"
-            },
-            {
-                question: "Which European language has the most dialects?",
-                options: ["German", "Italian"],
-                correctAnswer: 0,
-                image: "1.png"
-            },
-            {
-                question: "Which language is the most studied foreign language in the EU?",
-                options: ["English", "French"],
-                correctAnswer: 0,
-                image: "2.png"
-            },
-            {
-                question: "How many letters are in the Icelandic alphabet?",
-                options: ["32", "28"],
-                correctAnswer: 0,
-                image: "3.png"
-            },
-            {
-                question: "Which European language has the oldest written record?",
-                options: ["Greek", "Latin"],
-                correctAnswer: 0,
-                image: "4.png"
-            },
-            {
-                question: "Which European country has the most regional languages?",
-                options: ["Italy", "Spain"],
-                correctAnswer: 0,
-                image: "5.png"
-            }
-        ];
-
-        // Variables to track quiz state
+        // Global variables
+        let questions = [];
         let currentQuestionIndex = 0;
-        let userAnswers = new Array(questions.length).fill(null);
+        let userAnswers = [];
         let quizCompleted = false;
 
         // DOM elements
+        const loadingElement = document.getElementById('loading');
+        const errorElement = document.getElementById('error');
+        const quizContentElement = document.getElementById('quiz-content');
         const quizContainer = document.getElementById('quiz-container');
         const prevButton = document.getElementById('prev-button');
         const nextButton = document.getElementById('next-button');
         const resultsContainer = document.getElementById('results');
         const scoreElement = document.getElementById('score');
+        const scoreDetailsElement = document.getElementById('score-details');
         const restartButton = document.getElementById('restart-button');
         const progressBar = document.getElementById('progress');
         const questionCounter = document.getElementById('question-counter');
+
+        // Function to parse INI file content
+        function parseINI(content) {
+            const lines = content.split('\n');
+            const result = {};
+            let currentSection = null;
+            
+            for (let line of lines) {
+                line = line.trim();
+                
+                // Skip empty lines and comments
+                if (line === '' || line.startsWith(';')) {
+                    continue;
+                }
+                
+                // Check for section headers
+                if (line.startsWith('[') && line.endsWith(']')) {
+                    currentSection = line.slice(1, -1);
+                    result[currentSection] = {};
+                    continue;
+                }
+                
+                // Parse key-value pairs
+                const equalsIndex = line.indexOf('=');
+                if (equalsIndex !== -1 && currentSection) {
+                    const key = line.substring(0, equalsIndex).trim();
+                    const value = line.substring(equalsIndex + 1).trim();
+                    result[currentSection][key] = value;
+                }
+            }
+            
+            return result;
+        }
+
+        // Function to load questions from INI file
+        async function loadQuestions() {
+            try {
+                const response = await fetch('questions.ini');
+                if (!response.ok) {
+                    throw new Error('Failed to load questions.ini');
+                }
+                
+                const iniContent = await response.text();
+                const parsedData = parseINI(iniContent);
+                
+                // Extract questions from parsed data
+                questions = [];
+                let questionCount = 0;
+                
+                // Count questions and create question objects
+                while (true) {
+                    questionCount++;
+                    const questionKey = `question${questionCount}`;
+                    const imageKey = `question${questionCount}LinkToImage`;
+                    const answer1Key = `question${questionCount}Answer1`;
+                    const answer2Key = `question${questionCount}Answer2`;
+                    
+                    // Check if this question exists
+                    if (parsedData.questions && parsedData.questions[questionKey]) {
+                        questions.push({
+                            question: parsedData.questions[questionKey],
+                            image: parsedData.questions[imageKey] || '',
+                            options: [
+                                parsedData.questions[answer1Key],
+                                parsedData.questions[answer2Key]
+                            ],
+                            // First answer is always correct
+                            correctAnswer: 0
+                        });
+                    } else {
+                        // No more questions found
+                        questionCount--;
+                        break;
+                    }
+                }
+                
+                if (questions.length === 0) {
+                    throw new Error('No questions found in INI file');
+                }
+                
+                // Initialize user answers array
+                userAnswers = new Array(questions.length).fill(null);
+                
+                // Hide loading, show quiz content
+                loadingElement.style.display = 'none';
+                quizContentElement.style.display = 'block';
+                
+                // Initialize the quiz
+                displayQuestion();
+                
+            } catch (error) {
+                console.error('Error loading questions:', error);
+                loadingElement.style.display = 'none';
+                errorElement.style.display = 'block';
+            }
+        }
+
+        // Function to shuffle array (Fisher-Yates algorithm)
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
 
         // Function to display the current question
         function displayQuestion() {
@@ -337,19 +498,40 @@
             
             const question = questions[currentQuestionIndex];
             
+            // Shuffle options but remember which one is correct
+            const shuffledOptions = shuffleArray([...question.options]);
+            const correctAnswerIndex = shuffledOptions.indexOf(question.options[0]);
+            
             // Add HTML for the question
-            questionElement.innerHTML = `
+            let questionHTML = `
                 <div class="question-number">Question ${currentQuestionIndex + 1}</div>
-                <img src="1.png" alt="Illustration for the question" class="question-image">
+            `;
+            
+            // Add image if available
+            if (question.image && question.image.trim() !== '') {
+                questionHTML += `<img src="${question.image}" alt="Illustration for the question" class="question-image" style="display: block;">`;
+            }
+            
+            questionHTML += `
                 <div class="question-text">${question.question}</div>
                 <div class="options">
-                    <button class="option ${userAnswers[currentQuestionIndex] === 0 ? 'selected' : ''}" data-index="0">${question.options[0]}</button>
-                    <button class="option ${userAnswers[currentQuestionIndex] === 1 ? 'selected' : ''}" data-index="1">${question.options[1]}</button>
-                </div>
             `;
+            
+            // Add shuffled options
+            shuffledOptions.forEach((option, index) => {
+                const isSelected = userAnswers[currentQuestionIndex] === index;
+                questionHTML += `<button class="option ${isSelected ? 'selected' : ''}" data-index="${index}" data-original-index="${shuffledOptions.indexOf(option)}">${option}</button>`;
+            });
+            
+            questionHTML += `</div>`;
+            
+            questionElement.innerHTML = questionHTML;
             
             // Add question to container
             quizContainer.appendChild(questionElement);
+            
+            // Store the correct answer index for this shuffled question
+            questionElement.dataset.correctAnswerIndex = correctAnswerIndex;
             
             // Add event listeners to answer options
             const optionButtons = questionElement.querySelectorAll('.option');
@@ -359,7 +541,7 @@
                     optionButtons.forEach(btn => btn.classList.remove('selected'));
                     // Highlight selected option
                     button.classList.add('selected');
-                    // Save user's answer
+                    // Save user's answer (store the index in the shuffled array)
                     userAnswers[currentQuestionIndex] = parseInt(button.getAttribute('data-index'));
                     
                     // Enable Next button if an answer is selected
@@ -386,10 +568,10 @@
             
             // Next button
             if (currentQuestionIndex === questions.length - 1) {
-                nextButton.textContent = 'Finish Quiz';
+                nextButton.textContent = 'Finish Quiz →';
                 nextButton.disabled = userAnswers[currentQuestionIndex] === null;
             } else {
-                nextButton.textContent = 'Next';
+                nextButton.textContent = 'Next →';
                 nextButton.disabled = userAnswers[currentQuestionIndex] === null;
             }
         }
@@ -432,14 +614,36 @@
             
             // Calculate score
             let score = 0;
+            
             for (let i = 0; i < questions.length; i++) {
-                if (userAnswers[i] === questions[i].correctAnswer) {
-                    score++;
+                // For each question, we need to check if the selected answer matches the correct one
+                // Since answers are shuffled, we need to compare with the stored correct index
+                const questionElement = document.querySelector(`[data-correct-answer-index]`);
+                if (questionElement) {
+                    const correctAnswerIndex = parseInt(questionElement.dataset.correctAnswerIndex);
+                    if (userAnswers[i] === correctAnswerIndex) {
+                        score++;
+                    }
                 }
             }
             
             // Display score
-            scoreElement.textContent = `You answered ${score} out of ${questions.length} questions correctly!`;
+            const percentage = Math.round((score / questions.length) * 100);
+            scoreElement.textContent = `You scored ${score} out of ${questions.length} (${percentage}%)`;
+            
+            // Display score details
+            let detailsHTML = '';
+            if (percentage >= 80) {
+                detailsHTML = '<p>Excellent! You have great knowledge about European languages!</p>';
+            } else if (percentage >= 60) {
+                detailsHTML = '<p>Good job! You know quite a bit about European languages.</p>';
+            } else if (percentage >= 40) {
+                detailsHTML = '<p>Not bad! You have some knowledge about European languages.</p>';
+            } else {
+                detailsHTML = '<p>Keep learning! European languages are fascinating to explore.</p>';
+            }
+            
+            scoreDetailsElement.innerHTML = detailsHTML;
             
             quizCompleted = true;
         }
@@ -469,8 +673,8 @@
         nextButton.addEventListener('click', nextQuestion);
         restartButton.addEventListener('click', restartQuiz);
 
-        // Initialize the quiz when the page loads
-        displayQuestion();
+        // Load questions when the page loads
+        loadQuestions();
     </script>
 </body>
 </html>
