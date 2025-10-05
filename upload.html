@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Questions.ini</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+            color: #006064;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 150, 136, 0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #00796b, #4db6ac, #00796b);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #4db6ac;
+        }
+
+        h1 {
+            color: #00796b;
+            margin-bottom: 15px;
+            font-size: 2.2em;
+        }
+
+        .description {
+            color: #004d40;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .upload-form {
+            background-color: #f0fdfa;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #26a69a;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #00796b;
+        }
+
+        .file-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px dashed #4db6ac;
+            border-radius: 8px;
+            background-color: #ffffff;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .file-input:focus {
+            border-color: #00796b;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.1);
+        }
+
+        .submit-btn {
+            background-color: #00796b;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background-color: #004d40;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .submit-btn:disabled {
+            background-color: #b2dfdb;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+
+        .info-box {
+            background-color: #e1f5fe;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #0288d1;
+        }
+
+        .info-box h3 {
+            color: #01579b;
+            margin-bottom: 10px;
+        }
+
+        .info-box ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .info-box li {
+            padding: 5px 0;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .info-box li:before {
+            content: "•";
+            color: #0288d1;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .current-file {
+            background-color: #f3e5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #7b1fa2;
+        }
+
+        .current-file h3 {
+            color: #4a148c;
+            margin-bottom: 10px;
+        }
+
+        .file-content {
+            background-color: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+        }
+
+        .template-download {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background-color: #7b1fa2;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .download-btn:hover {
+            background-color: #4a148c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .validation-rules {
+            background-color: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ffa000;
+        }
+
+        .validation-rules h4 {
+            color: #ff6f00;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📝 Questions.ini File Upload</h1>
+            <p class="description">Upload your own questions.ini file to customize the quiz</p>
+        </header>
+
+        <?php
+        // PHP обработчик загрузки файла
+        $message = '';
+        $messageType = '';
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['ini_file'])) {
+            $uploadDir = __DIR__;
+            $targetFile = $uploadDir . '/questions.ini';
+            $uploadOk = true;
+            
+            // Проверяем тип файла
+            $fileType = strtolower(pathinfo($_FILES['ini_file']['name'], PATHINFO_EXTENSION));
+            if ($fileType !== 'ini') {
+                $message = 'Sorry, only INI files are allowed.';
+                $messageType = 'error';
+                $uploadOk = false;
+            }
+            
+            // Проверяем размер файла (максимум 1MB)
+            if ($_FILES['ini_file']['size'] > 1000000) {
+                $message = 'Sorry, your file is too large. Maximum size is 1MB.';
+                $messageType = 'error';
+                $uploadOk = false;
+            }
+            
+            // Проверяем, был ли файл загружен успешно
+            if ($uploadOk) {
+                if (move_uploaded_file($_FILES['ini_file']['tmp_name'], $targetFile)) {
+                    $message = 'The file has been uploaded successfully!';
+                    $messageType = 'success';
+                } else {
+                    $message = 'Sorry, there was an error uploading your file.';
+                    $messageType = 'error';
+                }
+            }
+        }
+        
+        // Читаем текущий файл questions.ini
+        $currentFileContent = '';
+        $currentFilePath = __DIR__ . '/questions.ini';
+        if (file_exists($currentFilePath)) {
+            $currentFileContent = htmlspecialchars(file_get_contents($currentFilePath));
+        }
+        ?>
+
+        <?php if ($message): ?>
+            <div class="message <?php echo $messageType; ?>">
+                <?php echo $message; ?>
+            </div>
+        <?php endif; ?>
+
+        <div class="info-box">
+            <h3>📋 File Format Requirements</h3>
+            <ul>
+                <li>File must have .ini extension</li>
+                <li>Maximum file size: 1MB</li>
+                <li>Use the following format for questions:</li>
+            </ul>
+            <div class="file-content" style="font-size: 0.8em; margin-top: 10px;">
+[questions]
+question1=Your question text here?
+question1LinkToImage=image1.png
+question1Answer1=Correct answer (always put correct answer here)
+question1Answer2=Incorrect answer
+
+question2=Another question?
+question2LinkToImage=
+question2Answer1=Correct answer
+question2Answer2=Wrong answer
+            </div>
+        </div>
+
+        <div class="validation-rules">
+            <h4>⚠️ Important Notes:</h4>
+            <ul>
+                <li>question1Answer1 must always contain the correct answer</li>
+                <li>If LinkToImage is empty, no image will be displayed for that question</li>
+                <li>Questions are numbered sequentially (question1, question2, question3...)</li>
+                <li>All questions must be in the [questions] section</li>
+            </ul>
+        </div>
+
+        <?php if ($currentFileContent): ?>
+        <div class="current-file">
+            <h3>📄 Current questions.ini File</h3>
+            <div class="file-content"><?php echo $currentFileContent; ?></div>
+        </div>
+        <?php endif; ?>
+
+        <div class="upload-form">
+            <form action="" method="post" enctype="multipart/form-data" id="uploadForm">
+                <div class="form-group">
+                    <label for="ini_file">Select your questions.ini file:</label>
+                    <input type="file" name="ini_file" id="ini_file" class="file-input" accept=".ini" required>
+                </div>
+                <button type="submit" class="submit-btn" id="submitBtn">Upload File</button>
+            </form>
+        </div>
+
+        <div class="template-download">
+            <p>Don't have a template? Download our example file:</p>
+            <a href="#" class="download-btn" id="downloadTemplate">Download Template</a>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript для улучшения UX
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('ini_file');
+            const submitBtn = document.getElementById('submitBtn');
+            const uploadForm = document.getElementById('uploadForm');
+            const downloadTemplate = document.getElementById('downloadTemplate');
+
+            // Показываем имя выбранного файла
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    const fileName = this.files[0].name;
+                    submitBtn.disabled = false;
+                    
+                    // Проверяем расширение файла
+                    if (!fileName.toLowerCase().endsWith('.ini')) {
+                        alert('Please select a file with .ini extension');
+                        this.value = '';
+                        submitBtn.disabled = true;
+                    }
+                } else {
+                    submitBtn.disabled = true;
+                }
+            });
+
+            // Подтверждение перед отправкой
+            uploadForm.addEventListener('submit', function(e) {
+                if (fileInput.files.length === 0) {
+                    e.preventDefault();
+                    alert('Please select a file first');
+                    return;
+                }
+
+                const fileName = fileInput.files[0].name;
+                if (!confirm(`Are you sure you want to replace the current questions.ini file with "${fileName}"?`)) {
+                    e.preventDefault();
+                }
+            });
+
+            // Создаем и скачиваем шаблон
+            downloadTemplate.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const templateContent = `[questions]
+question1=When is the European Day of Languages celebrated each year?
+question1LinkToImage=1.png
+question1Answer1=26 September
+question1Answer2=5 May
+
+question2=Which organization established the European Day of Languages?
+question2LinkToImage=2.png
+question2Answer1=Council of Europe
+question2Answer2=European Union
+
+question3=Approximately how many languages are spoken in Europe?
+question3LinkToImage=
+question3Answer1=Over 200
+question3Answer2=About 100
+
+question4=Which European country has the most official languages?
+question4LinkToImage=4.png
+question4Answer1=Switzerland
+question4Answer2=Belgium
+
+question5=What is the most widely spoken native language in the European Union?
+question5LinkToImage=5.png
+question5Answer1=German
+question5Answer2=French
+
+# Add more questions following the same pattern...
+# question6=Your question here?
+# question6LinkToImage=
+# question6Answer1=Correct answer
+# question6Answer2=Wrong answer`;
+
+                const blob = new Blob([templateContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'questions_template.ini';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+
+            // Drag and drop functionality
+            const fileInputContainer = fileInput.parentElement;
+            
+            fileInputContainer.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '#e0f2f1';
+                this.style.borderColor = '#00796b';
+            });
+
+            fileInputContainer.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '';
+                this.style.borderColor = '#4db6ac';
+            });
+
+            fileInputContainer.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '';
+                this.style.borderColor = '#4db6ac';
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    fileInput.files = files;
+                    fileInput.dispatchEvent(new Event('change'));
+                }
+            });
+        });
+    </script>
+</body>
+</html>
